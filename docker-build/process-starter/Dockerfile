@@ -20,6 +20,7 @@ ENV DEP_VERSION=$DEPENDENCY_MANAGER
 ARG CPUPOOLER
 ENV CPUPOOLER_VERSION=$CPUPOOLER
 ENV GOPATH /build
+ENV BUILD_DIR="$GOPATH/src/github.com/nokia/CPU-Pooler"
 
 RUN yum update -y \
 &&  yum install -y \
@@ -42,13 +43,13 @@ RUN yum update -y \
 &&  yum install -y golang \
 &&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 \
 &&  chmod +x /usr/local/bin/dep \
-&&  mkdir -p $GOPATH/src/github.com/nokia/CPU-Pooler \
-&&  curl -fsSL -k https://github.com/nokia/CPU-Pooler/archive/v${CPUPOOLER_VERSION}.tar.gz | tar zx --strip-components=1 -C $GOPATH/src/github.com/nokia/CPU-Pooler \
-&&  cd $GOPATH/src/github.com/nokia/CPU-Pooler \
+&&  mkdir -p $BUILD_DIR \
+&&  git clone https://github.com/nokia/danm.git $BUILD_DIR \
+&&  cd $BUILD_DIR \
+&&  git fetch --tags \
+&&  git checkout ${CPUPOOLER_VERSION} \
 &&  dep ensure --vendor-only \
 # process-starter
 &&  CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o process-starter ./cmd/process-starter \
-&&  mv $GOPATH/src/github.com/nokia/CPU-Pooler/process-starter /process-starter \
-&&  rm -rf $GOPATH 
-
-
+&&  mv $BUILD_DIR/process-starter /process-starter \
+&&  rm -rf $GOPATH

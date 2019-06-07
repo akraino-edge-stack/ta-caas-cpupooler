@@ -16,7 +16,8 @@
 %define COMPONENT_PART process-starter
 %define RPM_NAME caas-%{COMPONENT}
 %define RPM_MAJOR_VERSION 0.2.0
-%define RPM_MINOR_VERSION 2
+%define RPM_MINOR_VERSION 3
+%define CPUPOOLER_VERSION 227f1dcabf32c23fdd0c1fb2baa72d9cc9e1d3d6
 %define DEPENDENCY_MANAGER_VERSION 0.5.0
 %define IMAGE_TAG %{RPM_MAJOR_VERSION}-%{RPM_MINOR_VERSION}
 %define PROCESS_STARTER_INSTALL_PATH /opt/bin/
@@ -57,7 +58,7 @@ docker build \
   --build-arg https_proxy="${https_proxy}" \
   --build-arg no_proxy="${no_proxy}" \
   --build-arg DEPENDENCY_MANAGER="%{DEPENDENCY_MANAGER_VERSION}" \
-  --build-arg CPUPOOLER="%{RPM_MAJOR_VERSION}" \
+  --build-arg CPUPOOLER="%{CPUPOOLER_VERSION}" \
   --tag %{COMPONENT_PART}:builder \
   %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-build/%{COMPONENT_PART}/
 
@@ -103,7 +104,7 @@ docker build \
   --build-arg https_proxy="${https_proxy}" \
   --build-arg no_proxy="${no_proxy}" \
   --build-arg DEPENDENCY_MANAGER="%{DEPENDENCY_MANAGER_VERSION}" \
-  --build-arg CPUPOOLER="%{RPM_MAJOR_VERSION}" \
+  --build-arg CPUPOOLER="%{CPUPOOLER_VERSION}" \
   --tag %{COMPONENT}:%{IMAGE_TAG} \
   %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-build/%{COMPONENT}/
 
