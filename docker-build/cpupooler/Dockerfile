@@ -21,27 +21,29 @@ ARG CPUPOOLER
 ENV CPUPOOLER_VERSION=$CPUPOOLER
 ENV GOPATH /build
 ENV PATH /usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV BUILD_DIR="$GOPATH/src/github.com/nokia/CPU-Pooler"
 
 RUN apk update \
 &&  apk upgrade \
 &&  apk add --no-cache --virtual .build-deps build-base git mercurial go glide bash tar curl \
-&&  mkdir -p $GOPATH/src/github.com/nokia/CPU-Pooler \
 &&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 \
 &&  chmod +x /usr/local/bin/dep \
-&&  curl -fsSL -k https://github.com/nokia/CPU-Pooler/archive/v${CPUPOOLER_VERSION}.tar.gz | tar zx --strip-components=1 -C $GOPATH/src/github.com/nokia/CPU-Pooler \
-&&  cd $GOPATH/src/github.com/nokia/CPU-Pooler \
+&&  mkdir -p $BUILD_DIR \
+&&  git clone https://github.com/nokia/CPU-Pooler.git $BUILD_DIR \
+&&  cd $BUILD_DIR \
+&&  git fetch --tags \
+&&  git checkout ${CPUPOOLER_VERSION} \
 &&  dep ensure --vendor-only \
 # cpu-device-plugin
 &&  CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o cpu-device-plugin ./cmd/cpu-device-plugin \
-&&  mv $GOPATH/src/github.com/nokia/CPU-Pooler/cpu-device-plugin /cpu-device-plugin \
+&&  mv $BUILD_DIR/cpu-device-plugin /cpu-device-plugin \
 # cpu-setter
 &&  CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o cpu-setter ./cmd/cpusetter \
-&&  mv $GOPATH/src/github.com/nokia/CPU-Pooler/cpu-setter /cpu-setter \
+&&  mv $BUILD_DIR/cpu-setter /cpu-setter \
 # cpu-webhook
 &&  CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o cpu-device-webhook ./cmd/webhook \
-&&  mv $GOPATH/src/github.com/nokia/CPU-Pooler/cpu-device-webhook /cpu-device-webhook \
+&&  mv $BUILD_DIR/cpu-device-webhook /cpu-device-webhook \
 &&  apk del .build-deps \
 &&  rm -rf $GOPATH \
 &&  rm -rf /build \
 &&  rm -rf /root/.glide
-
