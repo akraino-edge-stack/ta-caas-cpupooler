@@ -44,7 +44,7 @@ RUN yum update -y \
 &&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 \
 &&  chmod +x /usr/local/bin/dep \
 &&  mkdir -p $BUILD_DIR \
-&&  git clone https://github.com/Levovar/CPU-Pooler.git $BUILD_DIR \
+&&  git clone https://github.com/nokia/CPU-Pooler.git $BUILD_DIR \
 &&  cd $BUILD_DIR \
 &&  git fetch --tags \
 &&  git checkout ${CPUPOOLER_VERSION} \

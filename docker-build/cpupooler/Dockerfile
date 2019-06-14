@@ -25,11 +25,12 @@ ENV BUILD_DIR="$GOPATH/src/github.com/nokia/CPU-Pooler"
 
 RUN apk update \
 &&  apk upgrade \
-&&  apk add --no-cache --virtual .build-deps build-base git mercurial go glide bash tar curl \
+&&  apk add --no-cache --virtual .build-deps build-base git mercurial go glide bash tar \
+&&  apk add --no-cache curl \
 &&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 \
 &&  chmod +x /usr/local/bin/dep \
 &&  mkdir -p $BUILD_DIR \
-&&  git clone https://github.com/Levovar/CPU-Pooler.git $BUILD_DIR \
+&&  git clone https://github.com/nokia/CPU-Pooler.git $BUILD_DIR \
 &&  cd $BUILD_DIR \
 &&  git fetch --tags \
 &&  git checkout ${CPUPOOLER_VERSION} \
