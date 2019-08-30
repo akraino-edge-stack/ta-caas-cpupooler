@@ -16,9 +16,10 @@
 %define COMPONENT_PART process-starter
 %define RPM_NAME caas-%{COMPONENT}
 %define RPM_MAJOR_VERSION 0.3.0
-%define RPM_MINOR_VERSION 2
+%define RPM_MINOR_VERSION 3
+%define go_version 1.12.9
 %define CPUPOOLER_VERSION d94704e4b2f9f91ee712c6385038413fb7aa064a
-%define DEPENDENCY_MANAGER_VERSION 0.5.0
+%define DEP_MAN_VERSION 0.5.0
 %define IMAGE_TAG %{RPM_MAJOR_VERSION}-%{RPM_MINOR_VERSION}
 %define PROCESS_STARTER_INSTALL_PATH /opt/bin/
 
@@ -57,8 +58,9 @@ docker build \
   --build-arg http_proxy="${http_proxy}" \
   --build-arg https_proxy="${https_proxy}" \
   --build-arg no_proxy="${no_proxy}" \
-  --build-arg DEPENDENCY_MANAGER="%{DEPENDENCY_MANAGER_VERSION}" \
-  --build-arg CPUPOOLER="%{CPUPOOLER_VERSION}" \
+  --build-arg go_version="%{go_version}" \
+  --build-arg DEP_MAN_VERSION="%{DEP_MAN_VERSION}" \
+  --build-arg CPUPOOLER_VERSION="%{CPUPOOLER_VERSION}" \
   --tag %{COMPONENT_PART}:builder \
   %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-build/%{COMPONENT_PART}/
 
@@ -103,8 +105,9 @@ docker build \
   --build-arg http_proxy="${http_proxy}" \
   --build-arg https_proxy="${https_proxy}" \
   --build-arg no_proxy="${no_proxy}" \
-  --build-arg DEPENDENCY_MANAGER="%{DEPENDENCY_MANAGER_VERSION}" \
-  --build-arg CPUPOOLER="%{CPUPOOLER_VERSION}" \
+  --build-arg DEP_MAN_VERSION="%{DEP_MAN_VERSION}" \
+  --build-arg CPUPOOLER_VERSION="%{CPUPOOLER_VERSION}" \
+  --build-arg go_version="%{go_version}" \
   --tag %{COMPONENT}:%{IMAGE_TAG} \
   %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-build/%{COMPONENT}/
 
