@@ -16,17 +16,23 @@ FROM alpine:3.9
 MAINTAINER Balazs Szekeres <balazs.szekeres@nokia.com>
 
 ARG DEPENDENCY_MANAGER
+ARG go_install_dir="/usr/local/go"
+ARG go_version
 ENV DEP_VERSION=$DEPENDENCY_MANAGER
 ARG CPUPOOLER
 ENV CPUPOOLER_VERSION=$CPUPOOLER
 ENV GOPATH /build
-ENV PATH /usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PATH $go_install_dir/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV BUILD_DIR="$GOPATH/src/github.com/nokia/CPU-Pooler"
 
 RUN apk update \
 &&  apk upgrade \
 &&  apk add --no-cache --virtual .build-deps build-base git mercurial go glide bash tar \
 &&  apk add --no-cache curl \
+&&  mkdir -p $go_install_dir \
+&&  curl -fsSL -k https://dl.google.com/go/go${go_version}.src.tar.gz | tar zx --strip-components=1 -C ${go_install_dir} \
+&&  cd ${go_install_dir}/src/ \
+&&  ./make.bash \
 &&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 \
 &&  chmod +x /usr/local/bin/dep \
 &&  mkdir -p $BUILD_DIR \
@@ -46,5 +52,6 @@ RUN apk update \
 &&  mv $BUILD_DIR/cpu-device-webhook /cpu-device-webhook \
 &&  apk del .build-deps \
 &&  rm -rf $GOPATH \
+&&  rm -rf $go_install_dir \
 &&  rm -rf /build \
 &&  rm -rf /root/.glide

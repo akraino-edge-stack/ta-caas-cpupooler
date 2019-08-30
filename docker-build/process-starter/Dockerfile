@@ -15,16 +15,16 @@
 FROM centos:7.6.1810
 MAINTAINER Balazs Szekeres <balazs.szekeres@nokia.com>
 
-ARG DEPENDENCY_MANAGER
-ENV DEP_VERSION=$DEPENDENCY_MANAGER
-ARG CPUPOOLER
-ENV CPUPOOLER_VERSION=$CPUPOOLER
+ARG DEP_MAN_VERSION
+ARG go_install_dir="/usr/local/go"
+ARG go_version
+ENV GOBIN=/usr/local/bin
 ENV GOPATH /build
-ENV BUILD_DIR="$GOPATH/src/github.com/nokia/CPU-Pooler"
+ENV PATH="$GOPATH/bin:$go_install_dir/bin:$PATH"
+ARG CPUPOOLER_VERSION
 
 RUN yum update -y \
 &&  yum install -y \
-      go \
       git \
       bash \
       glide \
@@ -38,14 +38,13 @@ RUN yum update -y \
       make \
       gcc \
       gcc-c++ \
-&&  rpm --import https://mirror.go-repo.io/centos/RPM-GPG-KEY-GO-REPO \
-&&  curl -s https://mirror.go-repo.io/centos/go-repo.repo | tee /etc/yum.repos.d/go-repo.repo \
-&&  yum install -y golang \
-&&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 \
+&&  mkdir -p $go_install_dir \
+&&  curl -fsSL -k https://dl.google.com/go/go${go_version}.linux-amd64.tar.gz | tar zx --strip-components=1 -C ${go_install_dir} \
+&&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_MAN_VERSION}/dep-linux-amd64 \
 &&  chmod +x /usr/local/bin/dep \
-&&  mkdir -p $BUILD_DIR \
-&&  git clone https://github.com/nokia/CPU-Pooler.git $BUILD_DIR \
-&&  cd $BUILD_DIR \
+&&  mkdir -p $GOPATH/src/github.com/nokia/CPU-Pooler \
+&&  git clone https://github.com/nokia/CPU-Pooler.git $GOPATH/src/github.com/nokia/CPU-Pooler \
+&&  cd $GOPATH/src/github.com/nokia/CPU-Pooler \
 &&  git fetch --tags \
 &&  git checkout ${CPUPOOLER_VERSION} \
 &&  dep ensure --vendor-only \
