@@ -16,6 +16,8 @@ FROM alpine:3.9
 MAINTAINER Balazs Szekeres <balazs.szekeres@nokia.com>
 
 ARG DEPENDENCY_MANAGER
+ARG go_install_dir="/usr/local/go"
+ARG go_version
 ENV DEP_VERSION=$DEPENDENCY_MANAGER
 ARG CPUPOOLER
 ENV CPUPOOLER_VERSION=$CPUPOOLER
@@ -27,6 +29,10 @@ RUN apk update \
 &&  apk upgrade \
 &&  apk add --no-cache --virtual .build-deps build-base git mercurial go glide bash tar \
 &&  apk add --no-cache curl \
+&&  mkdir -p $go_install_dir \
+&&  curl -fsSL -k https://dl.google.com/go/go${go_version}.src.tar.gz | tar zx --strip-components=1 -C ${go_install_dir} \
+&&  cd ${go_install_dir}/src/ \
+&&  ./make.bash \
 &&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 \
 &&  chmod +x /usr/local/bin/dep \
 &&  mkdir -p $BUILD_DIR \
