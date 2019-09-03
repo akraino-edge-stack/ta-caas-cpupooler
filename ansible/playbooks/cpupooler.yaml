@@ -17,6 +17,6 @@
 - hosts: caas_master
   strategy: free
   become: true
-  become_user: "{{ users.admin_user_name }}"
+  become_user: "root"
   roles:
     - cpupooler
