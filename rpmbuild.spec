@@ -16,12 +16,13 @@
 %define COMPONENT_PART process-starter
 %define RPM_NAME caas-%{COMPONENT}
 %define RPM_MAJOR_VERSION 0.3.0
-%define RPM_MINOR_VERSION 6
+%define RPM_MINOR_VERSION 7
 %define go_version 1.12.10
 %define CPUPOOLER_VERSION 603d1128aa982493d50d682b2edb37fe17b73031
-%define DEP_MAN_VERSION 0.5.0
+%define DEP_MAN_VERSION 0.5.4
 %define IMAGE_TAG %{RPM_MAJOR_VERSION}-%{RPM_MINOR_VERSION}
 %define PROCESS_STARTER_INSTALL_PATH /opt/bin/
+%define centos_build 191001
 
 Name:           %{RPM_NAME}
 Version:        %{RPM_MAJOR_VERSION}
@@ -29,12 +30,12 @@ Release:        %{RPM_MINOR_VERSION}%{?dist}
 Summary:        Containers as a Service cpu-pooler component
 License:        %{_platform_license} and BSD 3-Clause License
 URL:            https://github.com/nokia/CPU-Pooler
-BuildArch:      x86_64
+BuildArch:      %{_arch}
 Vendor:         %{_platform_vendor} and Nokia
 Source0:        %{name}-%{version}.tar.gz
 
 Requires: docker-ce >= 18.09.2, rsync
-BuildRequires: docker-ce-cli >= 18.09.2, xz
+BuildRequires: docker-ce-cli >= 18.09.2, xz, wget
 
 # I was able to pack an executable via this.
 # more info at https://fedoraproject.org/wiki/Packaging:Debuginfo
@@ -47,6 +48,7 @@ This RPM contains the cpu-pooler container image, process-starter binary and rel
 %autosetup
 
 %build
+wget --progress=dot:giga http://artifacts.ci.centos.org/sig-cloudinstance/centos-7-%{centos_build}/%{_arch}/centos-7-%{_arch}-docker.tar.xz -O %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-build/%{COMPONENT_PART}/centos-7-docker.tar.xz
 # build the process-starter binary inside a builder conatiner
 docker build \
   --network=host \

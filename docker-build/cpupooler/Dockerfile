@@ -31,7 +31,8 @@ RUN apk update \
 &&  curl -fsSL -k https://dl.google.com/go/go${go_version}.src.tar.gz | tar zx --strip-components=1 -C ${go_install_dir} \
 &&  cd ${go_install_dir}/src/ \
 &&  ./make.bash \
-&&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_MAN_VERSION}/dep-linux-amd64 \
+&&  if [ $(uname -m) == 'aarch64' ]; then HOST_ARCH=arm64; else HOST_ARCH=amd64; fi \
+&&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_MAN_VERSION}/dep-linux-$HOST_ARCH \
 &&  chmod +x /usr/local/bin/dep \
 &&  mkdir -p $BUILD_DIR \
 &&  git clone https://github.com/nokia/CPU-Pooler.git $BUILD_DIR \

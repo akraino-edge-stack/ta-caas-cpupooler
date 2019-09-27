@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM centos:7.6.1810
+FROM scratch
+ADD centos-7-docker.tar.xz /
+CMD ["/bin/bash"]
 MAINTAINER Balazs Szekeres <balazs.szekeres@nokia.com>
 
 ARG DEP_MAN_VERSION
@@ -39,8 +41,9 @@ RUN yum update -y \
       gcc \
       gcc-c++ \
 &&  mkdir -p $go_install_dir \
-&&  curl -fsSL -k https://dl.google.com/go/go${go_version}.linux-amd64.tar.gz | tar zx --strip-components=1 -C ${go_install_dir} \
-&&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_MAN_VERSION}/dep-linux-amd64 \
+&&  if [ $(uname -m) == 'aarch64' ]; then HOST_ARCH=arm64; else HOST_ARCH=amd64; fi \
+&&  curl -fsSL -k https://dl.google.com/go/go${go_version}.linux-$HOST_ARCH.tar.gz | tar zx --strip-components=1 -C ${go_install_dir} \
+&&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_MAN_VERSION}/dep-linux-$HOST_ARCH \
 &&  chmod +x /usr/local/bin/dep \
 &&  mkdir -p $GOPATH/src/github.com/nokia/CPU-Pooler \
 &&  git clone https://github.com/nokia/CPU-Pooler.git $GOPATH/src/github.com/nokia/CPU-Pooler \
