@@ -16,12 +16,17 @@
 %define COMPONENT_PART process-starter
 %define RPM_NAME caas-%{COMPONENT}
 %define RPM_MAJOR_VERSION 0.3.0
-%define RPM_MINOR_VERSION 4
+%define RPM_MINOR_VERSION 5
 %define go_version 1.12.9
 %define CPUPOOLER_VERSION d94704e4b2f9f91ee712c6385038413fb7aa064a
-%define DEP_MAN_VERSION 0.5.0
+%define DEP_MAN_VERSION 0.5.4
 %define IMAGE_TAG %{RPM_MAJOR_VERSION}-%{RPM_MINOR_VERSION}
 %define PROCESS_STARTER_INSTALL_PATH /opt/bin/
+%ifarch aarch64
+%define CENTOS_BASE centos@sha256:df89b0a0b42916b5b31b334fd52d3e396c226ad97dfe772848bdd6b00fb42bf0
+%else
+%define CENTOS_BASE centos:7.6.1810
+%endif
 
 Name:           %{RPM_NAME}
 Version:        %{RPM_MAJOR_VERSION}
@@ -29,7 +34,7 @@ Release:        %{RPM_MINOR_VERSION}%{?dist}
 Summary:        Containers as a Service cpu-pooler component
 License:        %{_platform_license} and BSD 3-Clause License
 URL:            https://github.com/nokia/CPU-Pooler
-BuildArch:      x86_64
+BuildArch:      %{_arch}
 Vendor:         %{_platform_vendor} and Nokia
 Source0:        %{name}-%{version}.tar.gz
 
@@ -61,6 +66,7 @@ docker build \
   --build-arg go_version="%{go_version}" \
   --build-arg DEP_MAN_VERSION="%{DEP_MAN_VERSION}" \
   --build-arg CPUPOOLER_VERSION="%{CPUPOOLER_VERSION}" \
+  --build-arg CENTOS_BASE="%{CENTOS_BASE}" \
   --tag %{COMPONENT_PART}:builder \
   %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-build/%{COMPONENT_PART}/
 
