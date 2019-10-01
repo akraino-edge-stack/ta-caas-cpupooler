@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f70b982_3d76a5fd",
+        "filename": "rpmbuild.spec",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 183
+      },
+      "writtenOn": "2019-10-01T15:22:40Z",
+      "side": 1,
+      "message": "same comment, common CentOS pls if possible",
+      "revId": "7712bd8af5ff2676a124c54dfdaad7156fc74c5a",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": true
+    }
+  ]
+}
