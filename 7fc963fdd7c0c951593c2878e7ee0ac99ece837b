@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e664bb41_11a19604",
+        "filename": "rpmbuild.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 183
+      },
+      "writtenOn": "2019-10-02T10:12:02Z",
+      "side": 1,
+      "message": "minor version update",
+      "revId": "7fc963fdd7c0c951593c2878e7ee0ac99ece837b",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": true
+    }
+  ]
+}
