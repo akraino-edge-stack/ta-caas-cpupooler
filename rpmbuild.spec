@@ -16,8 +16,8 @@
 %define COMPONENT_PART process-starter
 %define RPM_NAME caas-%{COMPONENT}
 %define RPM_MAJOR_VERSION 0.3.0
-%define RPM_MINOR_VERSION 5
-%define go_version 1.12.9
+%define RPM_MINOR_VERSION 6
+%define go_version 1.12.10
 %define CPUPOOLER_VERSION 603d1128aa982493d50d682b2edb37fe17b73031
 %define DEP_MAN_VERSION 0.5.0
 %define IMAGE_TAG %{RPM_MAJOR_VERSION}-%{RPM_MINOR_VERSION}
