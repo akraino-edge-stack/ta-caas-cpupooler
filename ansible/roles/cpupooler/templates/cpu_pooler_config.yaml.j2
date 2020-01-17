@@ -28,5 +28,10 @@ limitations under the License.
     {% endfor %}
   nodeSelector:
     nodename: "{{ hostdata['nodename'] | default('') }}"
+  tolerations:
+  - key: "node-maintenancemode"
+    value: "enabled"
+    operator: "Equal"
+    effect: "NoExecute"
   {% endif %}
 {% endfor %}
