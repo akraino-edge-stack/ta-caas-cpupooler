@@ -2,50 +2,110 @@
   "bom": [
     {
       "name": "alpine-linux-container",
-      "version": "3.9",
-      "source-url": "https://github.com/gliderlabs/docker-alpine/archive/c4f4c7a6e14d6efeb9a160da464717e03d2cc3ee.tar.gz",
-      "foss": "yes"
-    },
-    {
-      "name": "musl",
-      "version": "1.1.20-r3",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/musl/APKBUILD?h=3.9-stable",
-      "foss": "yes"
-    },
-    {
-      "name": "busybox",
-      "version": "1.29.3-r10",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/busybox/APKBUILD?h=3.9-stable",
+      "version": "3.9.6",
+      "source-url": "https://github.com/alpinelinux/docker-alpine/archive/d7eb97a39abbdfe6ba73236f844cb80b756280d1.tar.gz",
       "foss": "yes"
     },
     {
       "name": "alpine-baselayout",
       "version": "3.1.0-r3",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/alpine-baselayout/APKBUILD?h=3.9-stable",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/alpine-baselayout/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
       "name": "alpine-keys",
       "version": "2.1-r1",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/alpine-keys/APKBUILD?h=3.9-stable",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/alpine-keys/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "libcrypto1.1",
-      "version": "1.1.1a-r1",
-      "source-url": "https://git.alpinelinux.org/aports/tree/main/openssl/APKBUILD?h=3.9-stable",
+      "name": "apk-tools",
+      "version": "2.10.3-r1",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/apk-tools/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "libssl1.1",
-      "version": "1.1.1a-r1",
-      "source-url": "https://git.alpinelinux.org/aports/tree/main/openssl/APKBUILD?h=3.9-stable",
+      "name": "busybox",
+      "version": "1.29.3-r10",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/busybox/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "ca-certificates",
+      "version": "20191127-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/ca-certificates/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
       "name": "ca-certificates-cacert",
-      "version": "20190108-r0",
+      "version": "20191127-r0",
       "source-url": "https://git.alpinelinux.org/aports/tree/main/ca-certificates/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "curl",
+      "version": "7.64.0-r4",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/curl/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "findmnt",
+      "version": "2.33-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/util-linux/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "libblkid",
+      "version": "2.33-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/util-linux/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "libc-utils",
+      "version": "0.7.1-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/libc-dev/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "libcrypto1.1",
+      "version": "1.1.1g-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/openssl/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "libcurl",
+      "version": "7.64.0-r4",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/curl/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "libssh2",
+      "version": "1.9.0-r1",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/libssh2/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "libfdisk",
+      "version": "2.33-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/util-linux/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "libmount",
+      "version": "2.33-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/util-linux/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "libsmartcols",
+      "version": "2.33-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/util-linux/APKBUILD?h=3.9-stable",
+      "foss": "yes"
+    },
+    {
+      "name": "libssl1.1",
+      "version": "1.1.1g-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/openssl/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
@@ -55,67 +115,25 @@
       "foss": "yes"
     },
     {
-      "name": "ssl_client",
-      "version": "1.29.3-r10",
-      "source-url": "https://git.alpinelinux.org/aports/tree/main/busybox/APKBUILD?h=3.9-stable",
+      "name": "libuuid",
+      "version": "2.33-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/util-linux/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "zlib",
-      "version": "1.2.11-r1",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/zlib/APKBUILD?h=3.9-stable",
-      "foss": "yes"
-    },
-    {
-      "name": "apk-tools",
-      "version": "2.10.3-r1",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/apk-tools/APKBUILD?h=3.9-stable",
-      "foss": "yes"
-    },
-    {
-      "name": "scanelf",
-      "version": "1.2.3-r0",
-      "source-url": "https://git.alpinelinux.org/aports/tree/main/pax-utils/APKBUILD?h=3.9-stable",
-      "foss": "yes"
-    },
-    {
-      "name": "musl-utils",
-      "version": "1.1.20-r3",
+      "name": "musl",
+      "version": "1.1.20-r5",
       "source-url": "https://git.alpinelinux.org/aports/tree/main/musl/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "libc-utils",
-      "version": "0.7.1-r0",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/libc-dev/APKBUILD?h=3.9-stable",
+      "name": "musl-utils",
+      "version": "1.1.20-r5",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/musl/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "libbz2",
-      "version": "1.0.6-r6",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/bzip2/APKBUILD?h=3.9-stable",
-      "foss": "yes"
-    },
-    {
-      "name": "expat",
-      "version": "2.2.6-r0",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/expat/APKBUILD?h=3.9-stable",
-      "foss": "yes"
-    },
-    {
-      "name": "libffi",
-      "version": "3.2.1-r6",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/libffi/APKBUILD?h=3.9-stable",
-      "foss": "yes"
-    },
-    {
-      "name": "gdbm",
-      "version": "1.13-r1",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/gdbm/APKBUILD?h=3.9-stable",
-      "foss": "yes"
-    },
-    {
-      "name": "ncurses-terminfo-base",
+      "name": "ncurses-libs",
       "version": "6.1_p20190105-r0",
       "source-url": "https://git.alpinelinux.org/aports/tree/main/ncurses/APKBUILD?h=3.9-stable",
       "foss": "yes"
@@ -127,63 +145,45 @@
       "foss": "yes"
     },
     {
-      "name": "ncurses-libs",
+      "name": "ncurses-terminfo-base",
       "version": "6.1_p20190105-r0",
       "source-url": "https://git.alpinelinux.org/aports/tree/main/ncurses/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "readline",
-      "version": "7.0.003-r1",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/readline/APKBUILD?h=3.9-stable",
+      "name": "nghttp2-libs",
+      "version": "1.35.1-r2",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/nghttp2/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "sqlite-libs",
-      "version": "3.26.0-r3",
-      "source-url": "https://git.alpinelinux.org/aports/tree/main/sqlite/APKBUILD?h=3.9-stable",
+      "name": "scanelf",
+      "version": "1.2.3-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/pax-utils/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "python2",
-      "version": "2.7.15-r3",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/python2/APKBUILD?h=3.9-stable",
+      "name": "ssl_client",
+      "version": "1.29.3-r10",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/busybox/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "py-setuptools",
-      "version": "40.6.3-r0",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/py-setuptools/APKBUILD?h=3.9-stable",
+      "name": "util-linux",
+      "version": "2.33-r0",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/util-linux/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
-      "name": "py2-pip",
-      "version": "18.1-r0",
-      "source-url": "https://git.alpinelinux.org/cgit/aports/tree/main/py2-pip/APKBUILD?h=3.9-stable",
-      "foss": "yes"
-    },
-    {
-      "name": "pip",
-      "version": "19.0.2",
-      "source-url": "https://github.com/pypa/pip/archive/19.0.2.tar.gz",
-      "foss": "yes"
-    },
-    {
-      "name": "setuptools",
-      "version": "40.6.3.post20190116",
-      "source-url": "https://github.com/pypa/setuptools/archive/v40.6.3.tar.gz",
-      "foss": "yes"
-    },
-    {
-      "name": "dep-linux",
-      "version": "0.5.0",
-      "source-url": "https://github.com/golang/dep/archive/v0.5.0.tar.gz",
+      "name": "zlib",
+      "version": "1.2.11-r1",
+      "source-url": "https://git.alpinelinux.org/aports/tree/main/zlib/APKBUILD?h=3.9-stable",
       "foss": "yes"
     },
     {
       "name": "cpupooler",
-      "version": "0.2.0",
-      "source-url": "https://github.com/nokia/CPU-Pooler/archive/v0.2.0.tar.gz",
+      "version": "0.3.1-15-g0adced7",
+      "source-url": "https://github.com/nokia/CPU-Pooler/archive/0adced79e87e4cb87c41a70a654be377ca2d505f.tar.gz",
       "foss": "yes"
     }
   ]
