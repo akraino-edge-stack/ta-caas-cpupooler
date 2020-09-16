@@ -12,45 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM alpine:3.9
-MAINTAINER Balazs Szekeres <balazs.szekeres@nokia.com>
+ARG BUILDER_BASE=golang:1.13-alpine
+ARG FINAL_BASE=alpine:3.9.6
+ARG PROJECT_PATH=github.com/nokia/CPU-Pooler
 
-ARG DEP_MAN_VERSION
-ARG CPUPOOLER_VERSION
-ARG go_install_dir="/usr/local/go"
-ARG go_version
-ENV GOPATH /build
-ENV PATH $go_install_dir/bin:$PATH
-ENV BUILD_DIR="$GOPATH/src/github.com/nokia/CPU-Pooler"
+# Build stage
+FROM ${BUILDER_BASE} AS builder
+ARG PROJECT_PATH
+ENV CGO_ENABLED=0
+ENV GOOS=linux
 
-RUN apk update \
-&&  apk upgrade \
-&&  apk add --no-cache --virtual .build-deps build-base git mercurial go glide bash tar \
-&&  apk add --no-cache curl \
-&&  mkdir -p $go_install_dir \
-&&  curl -fsSL -k https://dl.google.com/go/go${go_version}.src.tar.gz | tar zx --strip-components=1 -C ${go_install_dir} \
-&&  cd ${go_install_dir}/src/ \
-&&  ./make.bash \
-&&  if [ $(uname -m) == 'aarch64' ]; then HOST_ARCH=arm64; else HOST_ARCH=amd64; fi \
-&&  curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v${DEP_MAN_VERSION}/dep-linux-$HOST_ARCH \
-&&  chmod +x /usr/local/bin/dep \
-&&  mkdir -p $BUILD_DIR \
-&&  git clone https://github.com/nokia/CPU-Pooler.git $BUILD_DIR \
-&&  cd $BUILD_DIR \
-&&  git fetch --tags \
-&&  git checkout ${CPUPOOLER_VERSION} \
-&&  dep ensure --vendor-only \
-# cpu-device-plugin
-&&  CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o cpu-device-plugin ./cmd/cpu-device-plugin \
-&&  mv $BUILD_DIR/cpu-device-plugin /cpu-device-plugin \
-# cpu-setter
-&&  CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o cpu-setter ./cmd/cpusetter \
-&&  mv $BUILD_DIR/cpu-setter /cpu-setter \
-# cpu-webhook
-&&  CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o cpu-device-webhook ./cmd/webhook \
-&&  mv $BUILD_DIR/cpu-device-webhook /cpu-device-webhook \
-&&  apk del .build-deps \
-&&  rm -rf $GOPATH \
-&&  rm -rf $go_install_dir \
-&&  rm -rf /build \
-&&  rm -rf /root/.glide
+RUN apk add curl git
+WORKDIR ${GOPATH}/src/${PROJECT_PATH}/bin
+WORKDIR ${GOPATH}/src/${PROJECT_PATH}
+ADD go.* ./
+RUN go mod download
+ADD . ./
+RUN go build -a -ldflags '-extldflags "-static"' -o bin/ ${PROJECT_PATH}/cmd/...
+RUN mv bin/cpusetter bin/cpu-setter
+RUN mv bin/webhook bin/cpu-device-webhook
+RUN mv bin/process-starter /process-starter
+
+# Multi-binary image stage
+FROM ${FINAL_BASE}
+MAINTAINER Gabor Mate <gabor.mate@nokia.com>
+ARG PROJECT_PATH
+
+RUN apk add util-linux
+COPY --from=builder /go/src/${PROJECT_PATH}/bin/cpu-* /
+
+ENTRYPOINT ["/bin/sh"]
