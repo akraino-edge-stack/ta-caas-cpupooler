@@ -13,26 +13,25 @@
 # limitations under the License.
 
 %define COMPONENT cpupooler
-%define COMPONENT_PART process-starter
 %define RPM_NAME caas-%{COMPONENT}
-%define RPM_MAJOR_VERSION 0.3.0
-%define RPM_MINOR_VERSION 9
-%define go_version 1.12.10
-%define CPUPOOLER_VERSION e0459346946b0907d26cd3d79dc54feb2c625286
-%define DEP_MAN_VERSION 0.5.4
+%define RPM_MAJOR_VERSION 0.3.1
+%define RPM_MINOR_VERSION 15
+%define CPUPOOLER_VERSION 0adced79e87e4cb87c41a70a654be377ca2d505f
 %define IMAGE_TAG %{RPM_MAJOR_VERSION}-%{RPM_MINOR_VERSION}
 %define PROCESS_STARTER_INSTALL_PATH /opt/bin/
-%define centos_build 191001
+%define PROJECT_NAME CPU-Pooler
+%define PROJECT_BUILD_ROOT %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}
 
 Name:           %{RPM_NAME}
 Version:        %{RPM_MAJOR_VERSION}
 Release:        %{RPM_MINOR_VERSION}%{?dist}
 Summary:        Containers as a Service cpu-pooler component
 License:        %{_platform_license} and BSD 3-Clause License
-URL:            https://github.com/nokia/CPU-Pooler
+URL:            https://github.com/nokia/%{PROJECT_NAME}
 BuildArch:      %{_arch}
 Vendor:         %{_platform_vendor} and Nokia
 Source0:        %{name}-%{version}.tar.gz
+Source1:        %{url}/archive/%{CPUPOOLER_VERSION}.tar.gz
 
 Requires: docker-ce >= 18.09.2, rsync
 BuildRequires: docker-ce-cli >= 18.09.2, xz, wget
@@ -45,95 +44,66 @@ BuildRequires: docker-ce-cli >= 18.09.2, xz, wget
 This RPM contains the cpu-pooler container image, process-starter binary and related deployment artifacts for the CaaS subsystem.
 
 %prep
+wget --progress=dot:giga --directory-prefix=%{_sourcedir} %{url}/archive/%{CPUPOOLER_VERSION}.tar.gz
 %autosetup
+# Autosetup extracts Source1 tar.gz to build directory and changes directory into it
+%autosetup -b 1 -T -n %{PROJECT_NAME}-%{CPUPOOLER_VERSION}
 
 %build
-wget --progress=dot:giga http://artifacts.ci.centos.org/sig-cloudinstance/centos-7-%{centos_build}/%{_arch}/centos-7-%{_arch}-docker.tar.xz -O %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-build/%{COMPONENT_PART}/centos-7-docker.tar.xz
-# build the process-starter binary inside a builder conatiner
+# build the builder image containing the binaries
 docker build \
-  --network=host \
-  --no-cache \
-  --force-rm \
-  --build-arg HTTP_PROXY="${http_proxy}" \
-  --build-arg HTTPS_PROXY="${https_proxy}" \
-  --build-arg NO_PROXY="${no_proxy}" \
-  --build-arg http_proxy="${http_proxy}" \
-  --build-arg https_proxy="${https_proxy}" \
-  --build-arg no_proxy="${no_proxy}" \
-  --build-arg go_version="%{go_version}" \
-  --build-arg DEP_MAN_VERSION="%{DEP_MAN_VERSION}" \
-  --build-arg CPUPOOLER_VERSION="%{CPUPOOLER_VERSION}" \
-  --tag %{COMPONENT_PART}:builder \
-  %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-build/%{COMPONENT_PART}/
+  --build-arg http_proxy \
+  --build-arg https_proxy \
+  --build-arg no_proxy \
+  --target builder \
+  --tag %{COMPONENT}:builder \
+  -f %{PROJECT_BUILD_ROOT}/docker-build/%{COMPONENT}/Dockerfile \
+  %{_builddir}/%{PROJECT_NAME}-%{CPUPOOLER_VERSION}
 
 # create a directory for process-starter binary
-mkdir -p %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/results
+mkdir -p %{PROJECT_BUILD_ROOT}/results
 
-# run the builder conatiner for process-starter binary
-docker run \
-  -id \
-  --rm \
-  --network=host \
-  --privileged \
-  -e HTTP_PROXY="${http_proxy}" \
-  -e HTTPS_PROXY="${https_proxy}" \
-  -e NO_PROXY="${no_proxy}" \
-  -e http_proxy="${http_proxy}" \
-  -e https_proxy="${https_proxy}" \
-  -e no_proxy="${no_proxy}" \
-  --entrypoint=/bin/sh \
-  %{COMPONENT_PART}:builder
+# run the builder container for process-starter binary
+docker create --name=temp %{COMPONENT}:builder
 
-# get the process-starter binary
-docker cp $(docker ps | grep "%{COMPONENT_PART}:builder" | awk -F' ' '{ print $1 }'):/process-starter %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/results/
+# extract process-starter binary
+docker cp temp:/process-starter %{PROJECT_BUILD_ROOT}/results/
 
 # rm container
-for container_ran in $(docker ps -a | grep "%{COMPONENT_PART}:builder" | awk -F' ' '{ print $1 }')
-do
-    docker rm -f $container_ran
-done
+docker rm -v temp
 
-# remove docker image
-docker rmi -f %{COMPONENT_PART}:builder
-
-# build the cpu pooler
+# build the cpu-pooler multi-binary image
 docker build \
-  --network=host \
-  --no-cache \
-  --force-rm \
-  --build-arg HTTP_PROXY="${http_proxy}" \
-  --build-arg HTTPS_PROXY="${https_proxy}" \
-  --build-arg NO_PROXY="${no_proxy}" \
-  --build-arg http_proxy="${http_proxy}" \
-  --build-arg https_proxy="${https_proxy}" \
-  --build-arg no_proxy="${no_proxy}" \
-  --build-arg DEP_MAN_VERSION="%{DEP_MAN_VERSION}" \
-  --build-arg CPUPOOLER_VERSION="%{CPUPOOLER_VERSION}" \
-  --build-arg go_version="%{go_version}" \
+  --build-arg http_proxy \
+  --build-arg https_proxy \
+  --build-arg no_proxy \
   --tag %{COMPONENT}:%{IMAGE_TAG} \
-  %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-build/%{COMPONENT}/
+  -f %{PROJECT_BUILD_ROOT}/docker-build/%{COMPONENT}/Dockerfile \
+  %{_builddir}/%{PROJECT_NAME}-%{CPUPOOLER_VERSION}
 
 # create a save folder
-mkdir -p %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-save/
+mkdir -p %{PROJECT_BUILD_ROOT}/docker-save/
 
 # save the cpu poooler container
-docker save %{COMPONENT}:%{IMAGE_TAG} | xz -z -T2 > %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-save/%{COMPONENT}:%{IMAGE_TAG}.tar
+docker save %{COMPONENT}:%{IMAGE_TAG} | xz -z -T2 > %{PROJECT_BUILD_ROOT}/docker-save/%{COMPONENT}:%{IMAGE_TAG}.tar
 
-# remove docker image
-docker rmi -f %{COMPONENT}:%{IMAGE_TAG}
+# remove docker images, containers
+docker rmi -f %{COMPONENT}:%{IMAGE_TAG} %{COMPONENT}:builder
+docker container prune --force
+docker image prune --force
 
 %install
 mkdir -p %{buildroot}/%{_caas_container_tar_path}/
-rsync -av %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/docker-save/%{COMPONENT}:%{IMAGE_TAG}.tar %{buildroot}/%{_caas_container_tar_path}/
+rsync -av %{PROJECT_BUILD_ROOT}/docker-save/%{COMPONENT}:%{IMAGE_TAG}.tar %{buildroot}/%{_caas_container_tar_path}/
 
 mkdir -p %{buildroot}%{PROCESS_STARTER_INSTALL_PATH}
-rsync -av %{_builddir}/%{RPM_NAME}-%{RPM_MAJOR_VERSION}/results/process-starter %{buildroot}/%{PROCESS_STARTER_INSTALL_PATH}/
+rsync -av %{PROJECT_BUILD_ROOT}/results/process-starter %{buildroot}/%{PROCESS_STARTER_INSTALL_PATH}/
 
 mkdir -p %{buildroot}/%{_playbooks_path}/
-rsync -av ansible/playbooks/cpupooler.yaml %{buildroot}/%{_playbooks_path}/
+rsync -av %{PROJECT_BUILD_ROOT}/ansible/playbooks/cpupooler.yaml %{buildroot}/%{_playbooks_path}/
 
 mkdir -p %{buildroot}/%{_roles_path}/
-rsync -av ansible/roles/cpupooler %{buildroot}/%{_roles_path}/
+rsync -av %{PROJECT_BUILD_ROOT}/ansible/roles/cpupooler %{buildroot}/%{_roles_path}/
 
 %files
 %{_caas_container_tar_path}/%{COMPONENT}:%{IMAGE_TAG}.tar
